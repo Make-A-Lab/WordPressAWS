@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#### USAGE ####
+
 # cd /tmp
 # git clone https://github.com/Make-A-Lab/WordPressAWS.git
 # git clone https://github.com/perusio/php-ini-cleanup.git
@@ -18,7 +20,7 @@ do
 done 
 
 # Create Random Password for Database
-DB_PASSWORD = $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+DB_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 22 | head -n 1)
 
 # Install Packages
 sudo add-apt-repository universe
@@ -54,7 +56,7 @@ sudo chmod -R 755 /var/www/html/wordpress/
 # Configure WordPress to use the database created and improve security
 sudo mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
 
-sudo tee <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
+sudo tee -a <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
 $(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
 // ** MySQL settings - You can get this info from your web host ** //
@@ -87,7 +89,7 @@ define( 'AS3CF_SETTINGS', serialize( array(
 EOF
 
 # Configure Nginx for WordPress
-sudo tee <<EOF /etc/nginx/sites-available/wordpress >/dev/null
+sudo tee -a <<EOF /etc/nginx/sites-available/wordpress >/dev/null
 server {
     listen 80;
     listen [::]:80;
@@ -127,4 +129,5 @@ deny from all
 </Files>
 EOF
 
+sudo mkdir /var/www/html/wordpress/wp-content/uploads
 sudo cp /var/www/html/wordpress/wp-includes/.htaccess /var/www/html/wordpress/wp-content/uploads/.htaccess
