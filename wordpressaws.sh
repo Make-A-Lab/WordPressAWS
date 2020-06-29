@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# cd /tmp
+# git clone https://github.com/Make-A-Lab/WordPressAWS.git
+# git clone https://github.com/perusio/php-ini-cleanup.git
+# chmod +x /tmp/WordPressAWS/wordpressaws.sh
+# /tmp/WordPressAWS/wordpressaws.sh -h blog.make-a-lab.com -u AKIAYTZQZXFBE2F6B3OQ -p aZLJp+2eOzdzmpQVT3zDqxVfl+IjaPE/1hDT9UWR
+
 # Pass script arguments
 while getopts h:u:p: option 
 do 
@@ -15,7 +21,6 @@ done
 DB_PASSWORD = $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 
 # Install Packages
-sudo apt update && sudo apt dist-upgrade && sudo apt autoremove
 cat packages.txt | xargs sudo apt-get install
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot

@@ -12,11 +12,6 @@ Resources:
     Properties:
       BucketName: !Ref Name
       AccessControl: PublicRead
-      Tags: 
-      - Key: Category
-        Value: Blog
-      - Key: Project
-        Value: Make-A-Lab 
   
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
