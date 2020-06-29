@@ -23,10 +23,10 @@ done
 DB_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 22 | head -n 1)
 
 # Install Packages
-sudo add-apt-repository universe
+echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
 sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt-get update
-cat packages.txt | xargs sudo apt-get install
+cat /tmp/WordPressAWS/packages.txt | xargs sudo apt-get install -y
 
 # Secure MariaDB installation and create wordpress database
 myql --user=root <<EOF
@@ -47,7 +47,7 @@ EOF
 # Download WordPress latest release
 cd /tmp && wget https://wordpress.org/latest.tar.gz
 tar -zxvf latest.tar.gz
-sudo mv wordpress /var/www/html/wordpress
+sudo mv /tmp/wordpress /var/www/html/wordpress
 
 # Adjusting ownership and permissions
 sudo chown -R www-data:www-data /var/www/html/wordpress/
