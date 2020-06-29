@@ -15,3 +15,5 @@ php-ldap
 php-zip
 php-curl
 software-properties-common
+certbot
+python3-certbot-nginx
