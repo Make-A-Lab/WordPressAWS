@@ -36,7 +36,7 @@ EOF
 
 # Configure php.ini document for production thanks to @Perusio script
 # More info at: https://github.com/perusio/php-ini-cleanup
-./etc/php-ini-cleanup/php_cleanup -p /etc/php/7.2/fpm/php.ini
+./tmp/php-ini-cleanup/php_cleanup -p /etc/php/7.2/fpm/php.ini
 
 # Download WordPress latest release
 cd /tmp && wget https://wordpress.org/latest.tar.gz
