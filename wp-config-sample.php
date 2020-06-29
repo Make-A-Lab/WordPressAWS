@@ -10,10 +10,6 @@
  * @generator GenerateWP.com
  */
 
-
-/* MySQL database table prefix. */
-$table_prefix = 'wp_';
-
 /* Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
