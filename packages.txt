@@ -1,0 +1,17 @@
+nginx
+mariadb-server
+mariadb-client
+php-fpm
+php-common
+php-mbstring
+php-xmlrpc
+php-soap
+php-gd
+php-xml
+php-intl
+php-mysql
+php-cli
+php-ldap
+php-zip
+php-curl
+software-properties-common

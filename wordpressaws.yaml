@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Make A Lab template to create S3 bucket for WordPress site
+
+Parameters:
+  Name:
+    Type: String
+    Description: Unique bucket name to place your media
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref Name
+      AccessControl: PublicRead
+      Tags: 
+      - Key: Category
+        Value: Blog
+      - Key: Project
+        Value: Make-A-Lab 
+  
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: WordPressPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowPublicRead
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+      Bucket: !Ref S3Bucket
+
+  IAMuser:
+    Type: AWS::IAM::User
+    Properties:
+      Path: "/"
+      Policies:
+      - PolicyName: BucketAccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:CreateBucket
+            - s3:DeleteObject
+            - s3:Put*
+            - s3:Get*
+            - s3:List*
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Bucket
+                - /*
+  
+  AccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref IAMuser
+
+Outputs:
+  S3BucketName:
+    Value: S3Bucket
+
+  UserAccessID:
+    Value: !Ref AccessKey
+  
+  UserAccessSecret:
+    Value: !GetAtt AccessKey.SecretAccessKey
