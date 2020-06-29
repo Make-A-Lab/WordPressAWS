@@ -54,9 +54,10 @@ sudo chown -R www-data:www-data /var/www/html/wordpress/
 sudo chmod -R 755 /var/www/html/wordpress/
 
 # Configure WordPress to use the database created and improve security
-sudo mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+sudo mv /tmp/WordPressAWS/wp-config-sample.php /var/www/html/wordpress/wp-config.php
 
 sudo tee -a <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
+
 $(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
 // ** MySQL settings - You can get this info from your web host ** //
@@ -101,13 +102,13 @@ server {
      client_max_body_size 100M;
 
     location / {
-        try_files $uri $uri/ /index.php?$args;        
+'        try_files $uri $uri/ /index.php?$args;'        
     }
 
-    location ~ \.php$ {
+'    location ~ \.php$ {'
     include snippets/fastcgi-php.conf;
     fastcgi_pass             unix:/var/run/php/php7.2-fpm.sock;
-    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+'    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;'
     }
 }
 EOF
