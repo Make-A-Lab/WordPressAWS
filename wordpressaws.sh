@@ -105,6 +105,8 @@ define( 'AS3CF_SETTINGS', serialize( array(
 ) ) );
 EOF
 
+sudo chmod -R 755 /var/www/html/wordpress/wp-config.php
+
 # Configure Nginx for WordPress
 sudo tee -a <<EOF /etc/nginx/sites-available/wordpress >/dev/null
 server {
