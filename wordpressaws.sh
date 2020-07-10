@@ -1,12 +1,24 @@
 #!/bin/bash
 
-#### USAGE ####
+<<COMMENT
+Author: Make A Lab
+Compatibility system: Ubuntu 18.04
+Description: This script make the following configurations:
+                - Install and configure Nginx for WordPress integration
+                - Install and configure MariaDB for WordPress integration
+                - Install and configure WordPress
+                - Set .htaccess restrictions for basic security
+                - Install and configure CertBot for SSL certificate
+                - Configure S3 bucket credentials for media storage
+Usage commands:
 
-# cd /tmp
-# git clone https://github.com/Make-A-Lab/WordPressAWS.git
-# git clone https://github.com/perusio/php-ini-cleanup.git
-# chmod +x /tmp/WordPressAWS/wordpressaws.sh
-# /tmp/WordPressAWS/wordpressaws.sh -h blog.make-a-lab.com -u ***** -p *******
+cd /tmp
+git clone https://github.com/Make-A-Lab/WordPressAWS.git
+git clone https://github.com/perusio/php-ini-cleanup.git
+chmod +x /tmp/WordPressAWS/wordpressaws.sh
+/tmp/WordPressAWS/wordpressaws.sh -h [DNS_RECORD] -u [USER_ACCESS_ID] -p [USER_ACCESS_SECRET]
+
+COMMENT
 
 # Pass script arguments
 while getopts h:u:p: option 

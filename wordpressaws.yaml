@@ -4,7 +4,27 @@ Description: Make A Lab template to create S3 bucket for WordPress site
 Parameters:
   Name:
     Type: String
-    Description: Unique bucket name to place your media
+    Description: 'Unique bucket name to place your media example: blog-s3-wp-media'
+  
+RegisterDomain:
+  Type: String
+  Default: 'NO'
+  Description: 'Want to register a sub domain on a hosted zone at Route 53?'
+  AllowedValues: ['YES', 'NO']
+  ConstraintDescription: 'must specify YES or NO.'
+
+  DomainName:
+    Type: String
+    Description: 'Name of the domain where your WordPress page is going to be registered example: make-a-lab.com'
+  
+  SubDomain:
+    Type: String
+    Description: 'Sub domain where your blog is registered example: blog.make-a-lab.com'
+    AllowedPattern: [a-zA-Z0-9]
+
+Conditions:
+  CreateSubDomain: 
+    !Equals [!Ref RegisterDomain, "YES"]
 
 Resources:
   S3Bucket:
@@ -58,12 +78,21 @@ Resources:
     Properties:
       UserName: !Ref IAMuser
 
-Outputs:
-  S3BucketName:
-    Value: S3Bucket
+  DNSRecord:
+    Type: 'AWS::Route53::RecordSet'
+    Condition: CreateSubDomain
+    Properties:
+      HostedZoneName: !Ref DomainName
+      Name: !Sub '${}.${DomainName}.'
+      Type: A
+      TTL: '300'
 
-  UserAccessID:
-    Value: !Ref AccessKey
-  
-  UserAccessSecret:
+Outputs:
+  DNS_RECORD:
+    Value: !Ref DNSRecord
+  USER_ACCESS_ID:
+    Value: !Ref AccessKey  
+  USER_ACCESS_SECRET:
     Value: !GetAtt AccessKey.SecretAccessKey
+  BUCKET_NAME:
+    Value: S3Bucket
