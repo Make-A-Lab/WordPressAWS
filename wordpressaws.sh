@@ -33,7 +33,8 @@ done
 
 # Create Random Password for Database
 DB_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 22 | head -n 1)
-DB_PREFIX=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+DB_RANDOM=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+DB_PREFIX='WP_'$DB_RANDOM'_'
 
 # Install Packages
 echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
@@ -42,7 +43,7 @@ sudo apt-get update
 cat /tmp/WordPressAWS/packages.txt | xargs sudo apt-get install -y
 
 # Secure MariaDB installation and create wordpress database
-myql --user=root <<EOF
+sudo mysql --user=root <<EOF
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 DROP DATABASE IF EXISTS test;
@@ -72,7 +73,7 @@ sudo mv /tmp/WordPressAWS/wp-config-sample.php /var/www/html/wordpress/wp-config
 sudo tee -a <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
 
 /* MySQL database table prefix. */
-\$table_prefix = 'WP_$DB_PREFIX_';
+\$table_prefix = '$DB_PREFIX';
 
 $(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
@@ -94,10 +95,10 @@ define('DB_CHARSET', 'utf8');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
-// Disallow file edit
-define( 'DISALLOW_FILE_EDIT', true );
+/** Disallow file edit */
+define('DISALLOW_FILE_EDIT', true );
 
-// Amazon S3 Bucket credentials
+/** Amazon S3 Bucket credentials */
 define( 'AS3CF_SETTINGS', serialize( array(
     'provider' => 'aws',
     'access-key-id' => '$S3_ACCESS_ID',
