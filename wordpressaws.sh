@@ -48,9 +48,9 @@ DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
-CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE DATABASE wp DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 CREATE USER 'wp_user'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL ON wordpress.* TO 'wp_user'@'localhost' IDENTIFIED BY '$DB_PASSWORD' WITH GRANT OPTION;
+GRANT ALL ON wp.* TO 'wp_user'@'localhost' IDENTIFIED BY '$DB_PASSWORD' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
 
@@ -70,16 +70,10 @@ sudo chmod -R 755 /var/www/html/wordpress/
 # Configure WordPress to use the database created and improve security
 sudo mv /tmp/WordPressAWS/wp-config-sample.php /var/www/html/wordpress/wp-config.php
 
-sudo tee -a <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
+tee -a <<EOF /var/www/html/wordpress/wp-config.php > /dev/null
 
-/* MySQL database table prefix. */
-\$table_prefix = '$DB_PREFIX';
-
-$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
-
-// ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wordpress');
+define('DB_NAME', 'wp');
 
 /** MySQL database username */
 define('DB_USER', 'wp_user');
@@ -94,6 +88,11 @@ define('DB_CHARSET', 'utf8');
 
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
+
+$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
+
+/* MySQL database table prefix. */
+\$table_prefix = '$DB_PREFIX';
 
 /** Disallow file edit */
 define('DISALLOW_FILE_EDIT', true );
@@ -134,8 +133,8 @@ EOF
 sudo ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/
 
 # Restart services
-sudo systemctl restart nginx.service
 sudo systemctl restart php7.2-fpm.service
+sudo systemctl restart nginx.service
 
 # Add SSL certificate
 sudo certbot --nginx
