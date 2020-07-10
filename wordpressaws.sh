@@ -72,7 +72,7 @@ sudo mv /tmp/WordPressAWS/wp-config-sample.php /var/www/html/wordpress/wp-config
 sudo tee -a <<EOF /var/www/html/wordpress/wp-config.php >/dev/null
 
 /* MySQL database table prefix. */
-$table_prefix = 'WP_$DB_PREFIX_';
+\$table_prefix = 'WP_$DB_PREFIX_';
 
 $(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
